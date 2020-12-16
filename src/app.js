@@ -18,6 +18,8 @@ const {
   removeNthElement2,
 } = require('./lib/arrays');
 
+const { negate, truthiness, isOdd, startsWith } = require('./lib/booleans');
+
 const app = express();
 
 app.use(express.json());
@@ -121,4 +123,26 @@ app.post('/arrays/remove-element', (req, res) => {
   res.status(200).send({ result: removeNthElement2(req.query.index, req.body.array) });
 });
 
+app.post('/booleans/negate', (req, res) => {
+  res.status(200).send({ result: negate(req.body.value) });
+});
+
+app.post('/booleans/truthiness', (req, res) => {
+  res.status(200).send({ result: truthiness(req.body.value) });
+});
+
+app.get('/booleans/is-odd/:id', (req, res) => {
+  const a = parseInt(req.params.id, 10);
+  if (Number.isNaN(a)) {
+    res.status(400).send({ error: 'Parameter must be a number.' });
+  }
+  res.status(200).send({ result: isOdd(req.params.id) });
+});
+
+app.get('/booleans/:string/starts-with/:char', (req, res) => {
+  if (req.params.char.length > 1) {
+    res.status(400).send({ error: 'Parameter "character" must be a single character.' });
+  }
+  res.status(200).send({ result: startsWith(req.params.char, req.params.string) });
+});
 module.exports = app;
